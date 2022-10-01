@@ -1,6 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noghte", "Noghte\Noghte.csproj", "{E999EE90-B231-4AC7-AACD-214E38B1193C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noghte.BuildingBlock", "Noghte.BuildingBlock\Noghte.BuildingBlock.csproj", "{15B21A4A-0174-48E2-8BD3-07C788489C39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noghte.WebApi", "Noghte.WebApi\Noghte.WebApi.csproj", "{66830ADA-F362-4222-BCAC-A3F5E1082575}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noghte.Domain", "Noghte.Domain\Noghte.Domain.csproj", "{E7882BC0-A7D4-406A-ACE3-45D7157A7A61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noghte.Application", "Noghte.Application\Noghte.Application.csproj", "{FB6DDCF6-ECF1-42A2-A957-A90842403B1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noghte.Infrastructure", "Noghte.Infrastructure\Noghte.Infrastructure.csproj", "{3D514B4F-5034-4A97-9EDC-501594AAA16F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +16,27 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E999EE90-B231-4AC7-AACD-214E38B1193C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E999EE90-B231-4AC7-AACD-214E38B1193C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E999EE90-B231-4AC7-AACD-214E38B1193C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E999EE90-B231-4AC7-AACD-214E38B1193C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15B21A4A-0174-48E2-8BD3-07C788489C39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15B21A4A-0174-48E2-8BD3-07C788489C39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15B21A4A-0174-48E2-8BD3-07C788489C39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15B21A4A-0174-48E2-8BD3-07C788489C39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66830ADA-F362-4222-BCAC-A3F5E1082575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66830ADA-F362-4222-BCAC-A3F5E1082575}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66830ADA-F362-4222-BCAC-A3F5E1082575}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66830ADA-F362-4222-BCAC-A3F5E1082575}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7882BC0-A7D4-406A-ACE3-45D7157A7A61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7882BC0-A7D4-406A-ACE3-45D7157A7A61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7882BC0-A7D4-406A-ACE3-45D7157A7A61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7882BC0-A7D4-406A-ACE3-45D7157A7A61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB6DDCF6-ECF1-42A2-A957-A90842403B1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB6DDCF6-ECF1-42A2-A957-A90842403B1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB6DDCF6-ECF1-42A2-A957-A90842403B1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB6DDCF6-ECF1-42A2-A957-A90842403B1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D514B4F-5034-4A97-9EDC-501594AAA16F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D514B4F-5034-4A97-9EDC-501594AAA16F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D514B4F-5034-4A97-9EDC-501594AAA16F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D514B4F-5034-4A97-9EDC-501594AAA16F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal

@@ -1,4 +1,4 @@
-﻿namespace Noghte.Domain;
+﻿namespace Noghte.Domain.Bookmarks;
 
 public class Bookmark
 {

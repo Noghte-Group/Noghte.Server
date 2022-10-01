@@ -1,4 +1,4 @@
-﻿namespace Noghte.Domain.Users;
+﻿namespace Noghte.Domain.PostToTags;
 
 public class PostToTag
 {

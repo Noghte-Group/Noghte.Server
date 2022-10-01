@@ -1,4 +1,4 @@
-﻿namespace Noghte.Domain;
+﻿namespace Noghte.Domain.Followings;
 
 public class Following
 {

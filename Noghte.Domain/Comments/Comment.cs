@@ -1,4 +1,4 @@
-﻿namespace Noghte.Domain.Users;
+﻿namespace Noghte.Domain.Comments;
 
 public class Comment
 {

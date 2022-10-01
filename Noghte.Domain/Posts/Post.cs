@@ -1,4 +1,8 @@
-﻿namespace Noghte.Domain.Users;
+﻿using Noghte.Domain.Comments;
+using Noghte.Domain.PostToTags;
+using Noghte.Domain.Users;
+
+namespace Noghte.Domain.Posts;
 
 public class Post
 {
@@ -25,6 +29,7 @@ public class Post
     public List<PostToTag> PostToTags { get; set; }
 
     public List<Comment> Comments { get; set; }
+    
     #endregion
 
 }
