@@ -15,9 +15,9 @@ public class User
 
     public string Email { get; set; }
 
-    #region Realations
+    #region Relations
 
-    public List<Category> Categories { get; set; }
+    public ICollection<Category> Categories { get; set; }
 
     public List<Post> Posts { get; set; }
 

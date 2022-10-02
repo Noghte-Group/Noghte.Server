@@ -24,7 +24,7 @@ public class Post
 
     public int LikeCount { get; set; }
 
-    #region Realations
+    #region Relations
 
     public List<PostToTag> PostToTags { get; set; }
 

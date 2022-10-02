@@ -13,7 +13,7 @@ public class Category
 
     public string Title { get; set; }
 
-    #region Realtions
+    #region Reltions
 
     public List<Post> Posts { get; set; }
 
