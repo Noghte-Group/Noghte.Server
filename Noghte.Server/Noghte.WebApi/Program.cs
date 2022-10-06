@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Noghte.BuildingBlock.Exceptions.Middlewares;
 using Noghte.Infrastructure.ApplicationDbContext;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,8 @@ builder.Services.AddDbContext<NoghteDbContext>(cfg =>
 
 var app = builder.Build();
 
+app.UseCustomExceptionHandler();
+    
 var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 var scope = scopeFactory.CreateScope();
 
@@ -31,7 +35,7 @@ noghteDbContext.Database.Migrate();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(cfg => cfg.DocExpansion(DocExpansion.None));
 }
 
 app.UseHttpsRedirection();
