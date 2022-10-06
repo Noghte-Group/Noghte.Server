@@ -31,9 +31,9 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
             .WithOne(x => x.User)
             .HasForeignKey(x => x.FollowerId);
 
-        //builder.HasOne(x => x.Role)
-        //    .WithMany(x => x.Users)
-        //    .HasForeignKey(x => x.RoleId);
+        builder.HasOne(x => x.Role)
+            .WithMany(x => x.Users)
+            .HasForeignKey(x => x.RoleId);
 
         #endregion
     }

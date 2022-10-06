@@ -8,4 +8,3 @@ public abstract class Entity<TKey> : IEntity<TKey>
 public abstract class Entity : Entity<long>
 {
 }
-
