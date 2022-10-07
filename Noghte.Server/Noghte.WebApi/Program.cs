@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Noghte.BuildingBlock.Exceptions.Middlewares;
+using Noghte.BuildingBlock.Extensions;
 using Noghte.Infrastructure.ApplicationDbContext;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -11,6 +12,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.InjectLifeCycles();
+
+
 builder.Services.AddDbContext<NoghteDbContext>(cfg =>
 {
     cfg.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));

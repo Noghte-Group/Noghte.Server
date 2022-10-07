@@ -25,6 +25,11 @@ namespace Noghte.Infrastructure
 
         #region Async Methods
 
+        public async Task<TEntity?> GetNullableByIdAsync(long id, CancellationToken cancellationToken)
+        {
+            return await _dbContext.Set<TEntity>().FindAsync(id, cancellationToken);
+        }
+        
         public virtual async Task AddAsync(TEntity entity, CancellationToken cancellationToken, bool saveNow = true)
         {
             Assert.NotNull(entity, nameof(entity));
