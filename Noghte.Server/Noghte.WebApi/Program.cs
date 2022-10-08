@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Noghte.BuildingBlock.Exceptions.Middlewares;
+using Noghte.BuildingBlock.Extensions;
 using Noghte.Infrastructure.ApplicationDbContext;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.InjectLifeCycles();
+
+
 builder.Services.AddDbContext<NoghteDbContext>(cfg =>
 {
     cfg.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
@@ -16,6 +22,8 @@ builder.Services.AddDbContext<NoghteDbContext>(cfg =>
 
 var app = builder.Build();
 
+app.UseCustomExceptionHandler();
+    
 var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 var scope = scopeFactory.CreateScope();
 
@@ -31,7 +39,7 @@ noghteDbContext.Database.Migrate();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(cfg => cfg.DocExpansion(DocExpansion.None));
 }
 
 app.UseHttpsRedirection();
