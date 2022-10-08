@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Noghte.BuildingBlock.Exceptions;
 using OneOf;
 
 namespace Noghte.BuildingBlock.ApiResponses;
@@ -31,12 +32,12 @@ public class GenericResult<TAccepted> : IActionResult
         }
         else if (_rejectedResponse is not null)
         {
-            ObjectResult objectResult = _rejectedResponse.HttpStatusCode switch
+            ObjectResult objectResult = _rejectedResponse.StatusCode switch
             {
-                HttpStatusCode.OK => new OkObjectResult(_rejectedResponse),
-                HttpStatusCode.Unauthorized => new UnauthorizedObjectResult(_rejectedResponse),
-                HttpStatusCode.Conflict => new ConflictObjectResult(_rejectedResponse),
-                HttpStatusCode.NotFound => new NotFoundObjectResult(_rejectedResponse),
+                ConsumerStatusCode.ServerError => new ObjectResult(_rejectedResponse) { StatusCode = 500 },
+                ConsumerStatusCode.UnAuthorized => new UnauthorizedObjectResult(_rejectedResponse),
+                ConsumerStatusCode.NotFound => new NotFoundObjectResult(_rejectedResponse),
+                ConsumerStatusCode.MethodNotAllowed => new ObjectResult(_rejectedResponse) { StatusCode = 405 },
                 _ => new BadRequestObjectResult(_rejectedResponse)
             };
 
