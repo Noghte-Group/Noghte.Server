@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Noghte.Infrastructure.ApplicationDbContext;
 
@@ -11,9 +12,10 @@ using Noghte.Infrastructure.ApplicationDbContext;
 namespace Noghte.Infrastructure.Migrations
 {
     [DbContext(typeof(NoghteDbContext))]
-    partial class NoghteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221012161520_Add_UserLikedListIds")]
+    partial class Add_UserLikedListIds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

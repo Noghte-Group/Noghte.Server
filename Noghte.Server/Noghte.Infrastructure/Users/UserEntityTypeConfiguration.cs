@@ -35,6 +35,11 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
             .WithMany(x => x.Users)
             .HasForeignKey(x => x.RoleId);
 
+        builder.HasMany(x => x.LikedPosts)
+            .WithOne(x => x.Users)
+            .HasForeignKey(x => x.UserId);
+
+
         #endregion
     }
 }

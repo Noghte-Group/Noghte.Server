@@ -37,6 +37,10 @@ public class PostEntityTypeConfiguration : IEntityTypeConfiguration<Post>
             .WithMany(x => x.Posts)
             .HasForeignKey(x => x.CategoryId);
 
+        builder.HasMany(x => x.LikedPosts)
+            .WithOne(x => x.Post)
+            .HasForeignKey(x => x.PostId);
+
         #endregion
     }
 
