@@ -10,4 +10,8 @@
       <PackageReference Include="MassTransit.Abstractions" Version="8.0.7" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Noghte.BuildingBlock\Noghte.BuildingBlock.csproj" />
+    </ItemGroup>
+
 </Project>

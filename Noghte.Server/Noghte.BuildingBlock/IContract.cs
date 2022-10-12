@@ -1,4 +1,4 @@
-﻿namespace Noghte.BuildingBlock.Exceptions;
+﻿namespace Noghte.BuildingBlock;
 
 public interface IContract
 {

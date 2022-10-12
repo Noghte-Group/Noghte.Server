@@ -1,8 +1,13 @@
+using System.Reflection;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Noghte.BuildingBlock;
+using Noghte.BuildingBlock.Exceptions;
 using Noghte.BuildingBlock.Exceptions.Middlewares;
 using Noghte.BuildingBlock.Extensions;
 using Noghte.Infrastructure.ApplicationDbContext;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +17,6 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.InjectLifeCycles();
 
 
 builder.Services.AddDbContext<NoghteDbContext>(cfg =>
@@ -20,10 +24,30 @@ builder.Services.AddDbContext<NoghteDbContext>(cfg =>
     cfg.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
 });
 
+#region Masstransit
+
+const string domainCommandName = nameof(IContract);
+var assemblies = Assembly.GetExecutingAssembly();
+
+
+var requestClients = assemblies.GetTypes()
+    .Where(t => t.GetInterface(domainCommandName) is not null && t.Name.Contains(domainCommandName) is false)
+    .Distinct()
+    .ToList();
+
+builder.Services.AddMediator(cfg =>
+{
+    cfg.AddConsumers(Assembly.GetExecutingAssembly());
+    requestClients.ForEach(message => { cfg.AddRequestClient(message); });
+    // cfg.ConfigureMediator((context, cfg) => { cfg.UseConsumeFilter(typeof(ValidationFilter<>), context); });
+});
+
+#endregion
+
 var app = builder.Build();
 
 app.UseCustomExceptionHandler();
-    
+
 var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 var scope = scopeFactory.CreateScope();
 
