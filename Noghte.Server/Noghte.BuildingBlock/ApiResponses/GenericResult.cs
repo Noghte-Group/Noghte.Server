@@ -1,46 +1,45 @@
-using System.Net;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using OneOf;
+using Noghte.BuildingBlock.Exceptions;
 
 namespace Noghte.BuildingBlock.ApiResponses;
 
-public class GenericResult<TAccepted> : IActionResult
-    where TAccepted : class
+public class GenericResult<T> : IActionResult
+    where T : class
 {
-    private readonly TAccepted _accepted;
-    private readonly ConsumerRejected _rejectedResponse;
+    private readonly Task<Response<T>>? _accepted;
+    private readonly Task<Response<ConsumerRejected>> _rejected;
 
-    public GenericResult(TAccepted accepted, ConsumerRejected rejectedResponse)
+    public GenericResult(Task<Response<T>>? accepted, Task<Response<ConsumerRejected>> rejectedResponse)
     {
         _accepted = accepted;
-        _rejectedResponse = rejectedResponse;
-    }
-
-    public GenericResult(OneOf<TAccepted, ConsumerRejected> result)
-    {
-        result.TryPickT0(out _accepted, out _);
-        result.TryPickT1(out _rejectedResponse, out _);
+        _rejected = rejectedResponse;
     }
 
     public async Task ExecuteResultAsync(ActionContext context)
     {
         if (_accepted is not null)
         {
-            var objectResult = new ObjectResult(_accepted);
-            await objectResult.ExecuteResultAsync(context);
-        }
-        else if (_rejectedResponse is not null)
-        {
-            ObjectResult objectResult = _rejectedResponse.HttpStatusCode switch
+            if (_accepted.IsCompletedSuccessfully)
             {
-                HttpStatusCode.OK => new OkObjectResult(_rejectedResponse),
-                HttpStatusCode.Unauthorized => new UnauthorizedObjectResult(_rejectedResponse),
-                HttpStatusCode.Conflict => new ConflictObjectResult(_rejectedResponse),
-                HttpStatusCode.NotFound => new NotFoundObjectResult(_rejectedResponse),
-                _ => new BadRequestObjectResult(_rejectedResponse)
-            };
+                var response = await _accepted;
+                var objectResult = new ObjectResult(response.Message);
+                await objectResult.ExecuteResultAsync(context);
+            }
+            else
+            {
+                var response = await _rejected;
+                ObjectResult objectResult = response.Message.StatusCode switch
+                {
+                    ConsumerStatusCode.ServerError => new ObjectResult(response.Message) { StatusCode = 500 },
+                    ConsumerStatusCode.UnAuthorized => new UnauthorizedObjectResult(response.Message),
+                    ConsumerStatusCode.NotFound => new NotFoundObjectResult(response.Message),
+                    ConsumerStatusCode.MethodNotAllowed => new ObjectResult(response.Message) { StatusCode = 405 },
+                    _ => new BadRequestObjectResult(response.Message)
+                };
 
-            await objectResult.ExecuteResultAsync(context);
+                await objectResult.ExecuteResultAsync(context);
+            }
         }
     }
 }

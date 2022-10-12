@@ -5,8 +5,7 @@ namespace Noghte.BuildingBlock.ApiResponses;
 
 public class ConsumerRejected
 {
-    public ConsumerStatusCode ConsumerStatusCode { get; set; }
-    public HttpStatusCode HttpStatusCode { get; init; }
-    public Dictionary<string, string[]> Reasons { get; init; }
+    public ConsumerStatusCode StatusCode { get; set; }
+    public string Reason { get; init; }
     public string Message { get; }
 }
