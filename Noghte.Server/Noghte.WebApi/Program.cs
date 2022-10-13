@@ -63,7 +63,11 @@ noghteDbContext.Database.Migrate();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(cfg => cfg.DocExpansion(DocExpansion.None));
+    app.UseSwaggerUI(cfg =>
+    {
+        cfg.DocExpansion(DocExpansion.None);
+        cfg.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseHttpsRedirection();

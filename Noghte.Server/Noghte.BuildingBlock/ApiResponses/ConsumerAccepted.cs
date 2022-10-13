@@ -12,6 +12,6 @@ public class ConsumerAccepted<TContract>
     }
 
     public TContract? Result { get; set; }
-    public string Message { get; }
+    public string Message { get; set; }
     public ConsumerStatusCode StatusCode { get; set; }
 }
