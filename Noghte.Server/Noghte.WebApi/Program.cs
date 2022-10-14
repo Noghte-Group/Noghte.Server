@@ -8,6 +8,7 @@ using Noghte.BuildingBlock.Extensions;
 using Noghte.Infrastructure.ApplicationDbContext;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Microsoft.Extensions.DependencyInjection;
+using Noghte.Application.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +28,7 @@ builder.Services.AddDbContext<NoghteDbContext>(cfg =>
 #region Masstransit
 
 const string domainCommandName = nameof(IContract);
-var assemblies = Assembly.GetExecutingAssembly();
+var assemblies = typeof(ReflectionExtensions).Assembly;
 
 
 var requestClients = assemblies.GetTypes()
@@ -37,7 +38,7 @@ var requestClients = assemblies.GetTypes()
 
 builder.Services.AddMediator(cfg =>
 {
-    cfg.AddConsumers(Assembly.GetExecutingAssembly());
+    cfg.AddConsumers(assemblies);
     requestClients.ForEach(message => { cfg.AddRequestClient(message); });
     // cfg.ConfigureMediator((context, cfg) => { cfg.UseConsumeFilter(typeof(ValidationFilter<>), context); });
 });
@@ -66,7 +67,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(cfg =>
     {
         cfg.DocExpansion(DocExpansion.None);
-        cfg.RoutePrefix = string.Empty;
     });
 }
 
