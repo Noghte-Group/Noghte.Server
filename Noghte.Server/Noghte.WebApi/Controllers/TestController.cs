@@ -1,7 +1,11 @@
-﻿using MassTransit.Mediator;
+﻿using System.Text;
+using System.Text.Json;
+using MassTransit.Mediator;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Noghte.Application;
 using Noghte.BuildingBlock.ApiResponses;
+using StackExchange.Redis;
 
 namespace Noghte.WebApi.Controllers;
 
@@ -10,17 +14,35 @@ namespace Noghte.WebApi.Controllers;
 public class TestController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IDistributedCache _cache;
+    private readonly IConnectionMultiplexer _redis;
 
-    public TestController(IMediator mediator) => _mediator = mediator;
+    public TestController(IMediator mediator, IConnectionMultiplexer redis, IDistributedCache cache)
+    {
+        _mediator = mediator;
+        _redis = redis;
+        _cache = cache;
+    }
 
     [HttpGet]
     public async Task<IActionResult> Test([FromQuery] TestRequest model, CancellationToken cancellationToken)
     {
-        var request = _mediator.CreateRequestClient<TestRequest>();
+        var content = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(model.Title));
 
-        var (accepted, rejected) =
-            await request.GetResponse<ConsumerAccepted<TestResponse>, ConsumerRejected>(model, cancellationToken);
 
-        return new GenericResult<ConsumerAccepted<TestResponse>>(accepted, rejected);
+        await _cache.SetAsync("Title", content,
+            new DistributedCacheEntryOptions { AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(20) },
+            cancellationToken);
+        
+
+        return Ok();
+    }
+
+    [HttpGet("key")]
+    public async Task<IActionResult> GetValue(string key ,CancellationToken cancellationToken)
+    {
+        var bookContent = await _cache.GetStringAsync(key, cancellationToken);
+
+        return Ok(bookContent);
     }
 }

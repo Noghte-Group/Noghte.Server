@@ -9,6 +9,7 @@ using Noghte.Infrastructure.ApplicationDbContext;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Microsoft.Extensions.DependencyInjection;
 using Noghte.Application.Extensions;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +46,19 @@ builder.Services.AddMediator(cfg =>
 
 #endregion
 
+#region Redis
+
+var redisConnectionString = builder.Configuration.GetConnectionString("RedisConnection");
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = redisConnectionString;
+    options.InstanceName = "";
+});
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(provider => ConnectionMultiplexer.Connect(redisConnectionString));
+
+#endregion
+
 var app = builder.Build();
 
 app.UseCustomExceptionHandler();
@@ -64,10 +78,7 @@ noghteDbContext.Database.Migrate();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(cfg =>
-    {
-        cfg.DocExpansion(DocExpansion.None);
-    });
+    app.UseSwaggerUI(cfg => { cfg.DocExpansion(DocExpansion.None); });
 }
 
 app.UseHttpsRedirection();
