@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Noghte.BuildingBlock\Noghte.BuildingBlock.csproj" />
+      <ProjectReference Include="..\Noghte.Domain\Noghte.Domain.csproj" />
     </ItemGroup>
 
 </Project>

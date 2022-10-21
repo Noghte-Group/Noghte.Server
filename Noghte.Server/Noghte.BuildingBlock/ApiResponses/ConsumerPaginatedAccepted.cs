@@ -1,6 +1,4 @@
-﻿using Noghte.BuildingBlock.Exceptions;
-
-namespace Noghte.BuildingBlock.ApiResponses;
+﻿namespace Noghte.BuildingBlock.ApiResponses;
 
 public class ConsumerPaginatedAccepted<TContract>
     where TContract : class, IContract

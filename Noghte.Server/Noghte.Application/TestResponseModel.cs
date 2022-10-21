@@ -2,7 +2,7 @@
 
 namespace Noghte.Application;
 
-public class TestResponse : IContract
+public class TestResponse : IMapping<Domain.Users.User>, IContract
 {
-    public string Title { get; set; }
+    public string UserName { get; set; }
 }

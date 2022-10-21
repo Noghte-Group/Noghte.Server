@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
+using Noghte.BuildingBlock.Exceptions;
 
 
-namespace Noghte.BuildingBlock.Exceptions.Middlewares;
+namespace Noghte.BuildingBlock.Middlewares;
 
 public static class CustomExceptionHandlerMiddlewareExtensions
 {

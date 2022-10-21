@@ -1,6 +1,5 @@
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using Noghte.BuildingBlock.Exceptions;
 
 namespace Noghte.BuildingBlock.ApiResponses;
 

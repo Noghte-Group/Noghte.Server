@@ -1,5 +1,6 @@
 ﻿namespace Noghte.BuildingBlock.Exceptions;
 
+using Noghte.BuildingBlock;
 using System;
 
 public class BadRequestException : AppException

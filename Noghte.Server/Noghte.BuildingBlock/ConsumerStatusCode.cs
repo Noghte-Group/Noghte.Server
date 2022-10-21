@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Noghte.BuildingBlock.Exceptions;
+namespace Noghte.BuildingBlock;
 
 public enum ConsumerStatusCode
 {
@@ -18,7 +18,7 @@ public enum ConsumerStatusCode
 
     [Display(Name = "خطای احراز هویت")]
     UnAuthorized = 401,
-    
+
     [Display(Name = "متد درخواست  ارسال شده نامعتبر می باشد")]
     MethodNotAllowed = 405
 }

@@ -15,31 +15,34 @@ public class TestController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IDistributedCache _cache;
-    private readonly IConnectionMultiplexer _redis;
 
-    public TestController(IMediator mediator, IConnectionMultiplexer redis, IDistributedCache cache)
+    public TestController(IMediator mediator, IDistributedCache cache)
     {
         _mediator = mediator;
-        _redis = redis;
         _cache = cache;
     }
 
     [HttpGet]
     public async Task<IActionResult> Test([FromQuery] TestRequest model, CancellationToken cancellationToken)
     {
-        var content = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(model.Title));
+        var request = _mediator.CreateRequestClient<TestRequest>();
+
+        var (accepted, rejected) = await request.GetResponse<ConsumerAccepted<TestResponse>, ConsumerRejected>(model, cancellationToken);
+
+        return new GenericResult<ConsumerAccepted<TestResponse>>(accepted, rejected);
+        //var content = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(model.UserName));
 
 
-        await _cache.SetAsync("Title", content,
-            new DistributedCacheEntryOptions { AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(20) },
-            cancellationToken);
-        
+        //await _cache.SetAsync("Title", content,
+        //    new DistributedCacheEntryOptions { AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(20) },
+        //    cancellationToken);
 
-        return Ok();
+
+        //return Ok();
     }
 
     [HttpGet("key")]
-    public async Task<IActionResult> GetValue(string key ,CancellationToken cancellationToken)
+    public async Task<IActionResult> GetValue(string key, CancellationToken cancellationToken)
     {
         var bookContent = await _cache.GetStringAsync(key, cancellationToken);
 

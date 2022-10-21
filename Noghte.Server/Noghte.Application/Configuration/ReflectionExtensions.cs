@@ -1,4 +1,4 @@
-namespace Noghte.Application.Extensions;
+namespace Noghte.Application.Configuration;
 
 public class ReflectionExtensions
 {

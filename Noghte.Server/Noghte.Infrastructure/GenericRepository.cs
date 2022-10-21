@@ -1,6 +1,6 @@
-﻿using Common.Utilities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Noghte.BuildingBlock.Common;
+using Noghte.BuildingBlock.Utilities;
 using Noghte.Domain;
 using Noghte.Infrastructure.ApplicationDbContext;
 

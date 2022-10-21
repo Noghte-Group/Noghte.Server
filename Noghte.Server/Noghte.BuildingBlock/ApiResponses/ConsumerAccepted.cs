@@ -1,5 +1,4 @@
 using System.Net;
-using Noghte.BuildingBlock.Exceptions;
 
 namespace Noghte.BuildingBlock.ApiResponses;
 
