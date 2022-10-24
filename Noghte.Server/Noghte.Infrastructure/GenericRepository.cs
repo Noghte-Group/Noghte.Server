@@ -30,12 +30,14 @@ namespace Noghte.Infrastructure
             return await _dbContext.Set<TEntity>().FindAsync(id, cancellationToken);
         }
         
-        public virtual async Task AddAsync(TEntity entity, CancellationToken cancellationToken, bool saveNow = true)
+        public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken, bool saveNow = true)
         {
             Assert.NotNull(entity, nameof(entity));
-            await Entities.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+            var result = await Entities.AddAsync(entity, cancellationToken).ConfigureAwait(false);
             if (saveNow)
                 await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+            return result.Entity;
         }
 
         public async Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken, bool saveNow = true)

@@ -10,6 +10,11 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 using Microsoft.Extensions.DependencyInjection;
 using Noghte.Application.Extensions;
 using StackExchange.Redis;
+using Noghte.Domain.Users;
+using Noghte.Infrastructure.Users;
+using Noghte.Domain;
+using Noghte.Infrastructure.Services;
+using Noghte.WebApi.Middleswares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,12 +24,14 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 
 builder.Services.AddDbContext<NoghteDbContext>(cfg =>
 {
     cfg.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
 });
+
 
 #region Masstransit
 
@@ -80,6 +87,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(cfg => { cfg.DocExpansion(DocExpansion.None); });
 }
+
+app.UseMiddleware<JwtMiddleware>();
 
 app.UseHttpsRedirection();
 
