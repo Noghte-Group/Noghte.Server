@@ -1,15 +1,7 @@
-﻿using Noghte.Domain.Users;
+﻿namespace Noghte.Domain.Roles;
 
-namespace Noghte.Domain.Roles;
-
-public class Role : Entity
+public enum Role
 {
-    public string Title { get; set; }
-    public string Description { get; set; }
-
-    #region Relations
-
-    public List<User> Users { get; set; }
-
-    #endregion
+    Admin = 1,
+    Author = 2,
 }

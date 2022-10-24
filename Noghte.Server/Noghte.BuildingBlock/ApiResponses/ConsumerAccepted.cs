@@ -3,15 +3,15 @@ using Noghte.BuildingBlock.Exceptions;
 
 namespace Noghte.BuildingBlock.ApiResponses;
 
-public class ConsumerAccepted<TResult>
+public class ConsumerAccepted<TContract> 
+    where TContract : class, IContract 
 {
     public ConsumerAccepted()
     {
-        HttpStatusCode = HttpStatusCode.OK;
+        StatusCode = ConsumerStatusCode.Success;
     }
 
-    public TResult? Result { get; set; }
-    public string Message { get; }
-    public HttpStatusCode HttpStatusCode { get; init; }
-    public ConsumerStatusCode ConsumerStatusCode { get; set; }
+    public TContract? Result { get; set; }
+    public string Message { get; set; }
+    public ConsumerStatusCode StatusCode { get; set; }
 }

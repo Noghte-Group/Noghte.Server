@@ -1,6 +1,7 @@
 ﻿using Noghte.Domain.Bookmarks;
 using Noghte.Domain.Categories;
 using Noghte.Domain.Comments;
+using Noghte.Domain.LikedPosts;
 using Noghte.Domain.PostToTags;
 using Noghte.Domain.Users;
 
@@ -17,7 +18,6 @@ public class Post : Entity
     public DateTime CreatedAt { get; set; }
     public int ReadingTime { get; set; }
     public int LikeCount { get; set; }
-
     #region Relations
 
     public List<PostToTag> PostToTags { get; set; }
@@ -27,5 +27,7 @@ public class Post : Entity
     public Category Category { get; set; }
 
     public List<Bookmark> Bookmarks { get; set; }
+    public List<LikedPost> LikedPosts { get; set; }
+
     #endregion
 }

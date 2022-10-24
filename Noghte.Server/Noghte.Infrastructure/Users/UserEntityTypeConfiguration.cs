@@ -10,7 +10,6 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.UserName).IsRequired(true);
-        builder.Property(x => x.RoleId).IsRequired(true);
         builder.Property(x => x.FirstName).IsRequired(true);
         builder.Property(x => x.PasswordHash).IsRequired(false);
         builder.Property(x => x.Email).IsRequired(false);
@@ -31,9 +30,10 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
             .WithOne(x => x.User)
             .HasForeignKey(x => x.FollowerId);
 
-        builder.HasOne(x => x.Role)
-            .WithMany(x => x.Users)
-            .HasForeignKey(x => x.RoleId);
+        builder.HasMany(x => x.LikedPosts)
+            .WithOne(x => x.Users)
+            .HasForeignKey(x => x.UserId);
+
 
         #endregion
     }

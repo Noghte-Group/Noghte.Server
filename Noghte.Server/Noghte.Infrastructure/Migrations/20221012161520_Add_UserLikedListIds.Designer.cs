@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Noghte.Infrastructure.ApplicationDbContext;
 
@@ -11,9 +12,10 @@ using Noghte.Infrastructure.ApplicationDbContext;
 namespace Noghte.Infrastructure.Migrations
 {
     [DbContext(typeof(NoghteDbContext))]
-    partial class NoghteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221012161520_Add_UserLikedListIds")]
+    partial class Add_UserLikedListIds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -245,6 +247,27 @@ namespace Noghte.Infrastructure.Migrations
                     b.ToTable("PostToTag");
                 });
 
+            modelBuilder.Entity("Noghte.Domain.Roles.Role", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Role");
+                });
+
             modelBuilder.Entity("Noghte.Domain.Tags.Tag", b =>
                 {
                     b.Property<long>("Id")
@@ -277,25 +300,30 @@ namespace Noghte.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("LastLoginDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                    b.Property<long>("RoleId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("User");
                 });
@@ -436,6 +464,17 @@ namespace Noghte.Infrastructure.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("Noghte.Domain.Users.User", b =>
+                {
+                    b.HasOne("Noghte.Domain.Roles.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("Noghte.Domain.Categories.Category", b =>
                 {
                     b.Navigation("FavoriteCategories");
@@ -452,6 +491,11 @@ namespace Noghte.Infrastructure.Migrations
                     b.Navigation("LikedPosts");
 
                     b.Navigation("PostToTags");
+                });
+
+            modelBuilder.Entity("Noghte.Domain.Roles.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Noghte.Domain.Tags.Tag", b =>
