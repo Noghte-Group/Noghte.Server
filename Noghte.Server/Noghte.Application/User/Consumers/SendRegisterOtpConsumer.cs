@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Noghte.Application.User.Contracts;
+using Noghte.BuildingBlock;
 using Noghte.BuildingBlock.ApiResponses;
 using Noghte.BuildingBlock.ConsumerMessages;
-using Noghte.BuildingBlock.Exceptions;
 using Noghte.BuildingBlock.Helpers;
 using Noghte.Domain.Users;
 using System.Text;

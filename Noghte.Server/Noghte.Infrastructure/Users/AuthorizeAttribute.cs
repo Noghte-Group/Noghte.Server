@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Noghte.BuildingBlock;
 using Noghte.BuildingBlock.ApiResponses;
 using Noghte.BuildingBlock.ConsumerMessages;
-using Noghte.BuildingBlock.Exceptions;
 using Noghte.Domain.Users;
 
 namespace Noghte.Infrastructure.Users;

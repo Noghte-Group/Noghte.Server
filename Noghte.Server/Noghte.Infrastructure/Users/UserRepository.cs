@@ -1,10 +1,11 @@
-﻿using Noghte.Domain;
+﻿using Noghte.BuildingBlock.LifeCycle;
+using Noghte.Domain;
 using Noghte.Domain.Users;
 using Noghte.Infrastructure.ApplicationDbContext;
 
 namespace Noghte.Infrastructure.Users;
 
-public class UserRepository : GenericRepository<User>, IUserRepository
+public class UserRepository : GenericRepository<User>, IUserRepository, IScopedDependency
 {
     private readonly IJwtService _service;
 

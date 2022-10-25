@@ -1,21 +1,13 @@
-using System.Reflection;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using Noghte.BuildingBlock;
-using Noghte.BuildingBlock.Exceptions;
-using Noghte.BuildingBlock.Extensions;
-using Noghte.Infrastructure.ApplicationDbContext;
-using Swashbuckle.AspNetCore.SwaggerUI;
-using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis;
-using Noghte.Application.Configuration;
-using Noghte.BuildingBlock.Middlewares;
 using Noghte.Application.Configuration.Mapper;
-using Noghte.Domain.Users;
-using Noghte.Infrastructure.Users;
-using Noghte.Domain;
-using Noghte.Infrastructure.Services;
+using Noghte.BuildingBlock;
+using Noghte.BuildingBlock.Extensions;
+using Noghte.BuildingBlock.Middlewares;
+using Noghte.Infrastructure.ApplicationDbContext;
 using Noghte.WebApi.Middleswares;
+using StackExchange.Redis;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,31 +18,30 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.InitializeAutoMapper();
+builder.Services.InjectLifeCycles();
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.InitializeAutoMapper();
 
 builder.Services.AddDbContext<NoghteDbContext>(cfg =>
 {
     cfg.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
 });
 
-
 #region Masstransit
 
 const string domainCommandName = nameof(IContract);
-var assemblies = typeof(ReflectionExtensions).Assembly;
+var assembly = AppDomain.CurrentDomain.GetAssemblies()
+           .Single(assembly => assembly.GetName().Name == "Noghte.Application");
 
 
-var requestClients = assemblies.GetTypes()
+var requestClients = assembly.GetTypes()
     .Where(t => t.GetInterface(domainCommandName) is not null && t.Name.Contains(domainCommandName) is false)
     .Distinct()
     .ToList();
 
 builder.Services.AddMediator(cfg =>
 {
-    cfg.AddConsumers(assemblies);
+    cfg.AddConsumers(assembly);
     requestClients.ForEach(message => { cfg.AddRequestClient(message); });
     // cfg.ConfigureMediator((context, cfg) => { cfg.UseConsumeFilter(typeof(ValidationFilter<>), context); });
 });

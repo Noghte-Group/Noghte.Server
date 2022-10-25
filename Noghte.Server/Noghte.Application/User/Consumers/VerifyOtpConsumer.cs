@@ -2,11 +2,10 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Noghte.Application.User.Contracts.Requests;
 using Noghte.Application.User.Contracts.Responses;
+using Noghte.BuildingBlock;
 using Noghte.BuildingBlock.ApiResponses;
 using Noghte.BuildingBlock.ConsumerMessages;
-using Noghte.BuildingBlock.Exceptions;
 using Noghte.Domain.Users;
-using StackExchange.Redis;
 using System.Text;
 using System.Text.RegularExpressions;
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Noghte.BuildingBlock.LifeCycle;
 using Noghte.Domain;
 using Noghte.Domain.Users;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace Noghte.Infrastructure.Services;
 
-public class JwtService : IJwtService
+public class JwtService : IJwtService, IScopedDependency
 {
     private readonly IConfiguration _configuration;
 
