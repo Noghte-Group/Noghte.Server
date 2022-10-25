@@ -20,13 +20,11 @@ public class TestController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IDistributedCache _cache;
-    private readonly IConnectionMultiplexer _redis;
-    private readonly IUserRepository _userRepository;
 
     public TestController(IMediator mediator, IConnectionMultiplexer redis, IDistributedCache cache, IUserRepository userRepository)
+
     {
         _mediator = mediator;
-        _redis = redis;
         _cache = cache;
         _userRepository = userRepository;
     }
@@ -36,15 +34,26 @@ public class TestController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Test([FromQuery] TestRequest model, CancellationToken cancellationToken)
     {
-        var content = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(model.Title));
+        var request = _mediator.CreateRequestClient<TestRequest>();
+
+        var (accepted, rejected) = await request.GetResponse<ConsumerAccepted<TestResponse>, ConsumerRejected>(model, cancellationToken);
 
 
-        await _cache.SetAsync("Title", content,
-            new DistributedCacheEntryOptions { AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(20) },
-            cancellationToken);
+        return new GenericResult<ConsumerAccepted<TestResponse>>(accepted, rejected);
+        //var content = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(model.UserName));
+
+        //await _cache.SetAsync("Title", content,
+            //new DistributedCacheEntryOptions { AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(20) },
+            //cancellationToken);
 
 
-        return Ok();
+
+        //await _cache.SetAsync("Title", content,
+        //    new DistributedCacheEntryOptions { AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(20) },
+        //    cancellationToken);
+
+
+        //return Ok();
     }
 
     [HttpGet("key")]

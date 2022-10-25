@@ -3,13 +3,14 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Noghte.BuildingBlock;
 using Noghte.BuildingBlock.Exceptions;
-using Noghte.BuildingBlock.Exceptions.Middlewares;
 using Noghte.BuildingBlock.Extensions;
 using Noghte.Infrastructure.ApplicationDbContext;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Microsoft.Extensions.DependencyInjection;
-using Noghte.Application.Extensions;
 using StackExchange.Redis;
+using Noghte.Application.Configuration;
+using Noghte.BuildingBlock.Middlewares;
+using Noghte.Application.Configuration.Mapper;
 using Noghte.Domain.Users;
 using Noghte.Infrastructure.Users;
 using Noghte.Domain;
@@ -24,6 +25,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.InitializeAutoMapper();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
