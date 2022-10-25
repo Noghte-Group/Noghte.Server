@@ -1,18 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="MassTransit.Abstractions" Version="8.0.7" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MassTransit.Abstractions" Version="8.0.7" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Noghte.BuildingBlock\Noghte.BuildingBlock.csproj" />
-      <ProjectReference Include="..\Noghte.Domain\Noghte.Domain.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Noghte.BuildingBlock\Noghte.BuildingBlock.csproj" />
+		<ProjectReference Include="..\Noghte.Domain\Noghte.Domain.csproj" />
+		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="3.1.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="User\Contracts\Validators\" />
+	</ItemGroup>
 
 </Project>
