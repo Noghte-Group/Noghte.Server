@@ -30,8 +30,7 @@ public static class AutomapperConfiguration
         var allTypes = assembly.ExportedTypes;
 
         var list = allTypes.Where(type => type.IsClass && !type.IsAbstract &&
-        type.BaseType.IsGenericType && type.GetInterfaces().Contains(typeof(IContract)))
-            .Select(r => Activator.CreateInstance(r));
+            typeof(IContract).IsAssignableFrom(type));
 
         var profile = new MappingPrfile(list);
 
