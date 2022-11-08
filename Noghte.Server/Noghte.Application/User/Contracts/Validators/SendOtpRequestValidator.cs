@@ -3,7 +3,7 @@ using Noghte.BuildingBlock.ConsumerMessages;
 
 namespace Noghte.Application.User.Contracts.Validators;
 
-public class SendOtpRequestValidator : AbstractValidator<SendOtpRequest>
+public class SendOtpRequestValidator : AbstractValidator<SendRegisterOtpRequest>
 {
     public SendOtpRequestValidator()
     {

@@ -15,17 +15,27 @@ public class UserController : ControllerBase
 
     public UserController(IMediator mediator) => _mediator = mediator;
 
-    [HttpPost("sendOtp")]
-    public async Task<IActionResult> SendOtp([FromQuery] SendOtpRequest model, CancellationToken cancellationToken) 
+    [HttpPost("send-Register-Otp")]
+    public async Task<IActionResult> SendRegisterOtp([FromQuery] SendRegisterOtpRequest model, CancellationToken cancellationToken)
     {
-        var request = _mediator.CreateRequestClient<SendOtpRequest>();
-        
+        var request = _mediator.CreateRequestClient<SendRegisterOtpRequest>();
+
         var (accepted, rejected) = await request.GetResponse<ConsumerAccepted<SendOtpResponse>, ConsumerRejected>(model, cancellationToken);
 
         return new GenericResult<ConsumerAccepted<SendOtpResponse>>(accepted, rejected);
     }
 
-    [HttpPost("verifyOtp")]
+    [HttpPost("send-Login-Otp")]
+    public async Task<IActionResult> SendLoginOtp([FromQuery] SendLoginOtpRequest model, CancellationToken cancellationToken)
+    {
+        var request = _mediator.CreateRequestClient<SendLoginOtpRequest>();
+
+        var (accepted, rejected) = await request.GetResponse<ConsumerAccepted<SendOtpResponse>, ConsumerRejected>(model, cancellationToken);
+
+        return new GenericResult<ConsumerAccepted<SendOtpResponse>>(accepted, rejected);
+    }
+
+    [HttpPost("verify-Otp")]
     public async Task<IActionResult> VerifyOtp(VerifyOtpRequest model, CancellationToken cancellationToken)
     {
         var request = _mediator.CreateRequestClient<VerifyOtpRequest>();
@@ -34,5 +44,4 @@ public class UserController : ControllerBase
 
         return new GenericResult<ConsumerAccepted<VerifyOtpResponse>>(accepted, rejected);
     }
-
 }

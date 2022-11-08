@@ -35,6 +35,6 @@ public static class ConsumerMessage
     public static readonly Func<string> Authenticated_Successfully=
         () => $"user_have_been_autheticated_successfully";
 
-    public static readonly Func<string> Sent_Successfully =
-    () => $"otp_has_been_sent_successfully";
+    public static readonly Func<string, string> Sent_Successfully =
+    (param) => $"{param}_has_been_sent_successfully";
 }
