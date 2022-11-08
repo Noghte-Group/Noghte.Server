@@ -16,8 +16,4 @@
 		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="3.1.8" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="User\Contracts\Validators\" />
-	</ItemGroup>
-
 </Project>

@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using System.Net;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Http;
+using Noghte.BuildingBlock.ApiResponses;
 using Noghte.BuildingBlock.Exceptions;
-
+using System.Net;
+using System.Text.Json;
 
 namespace Noghte.BuildingBlock.Middlewares;
 
@@ -22,58 +20,78 @@ public class CustomExceptionHandlerMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly IWebHostEnvironment _env;
-    private readonly ILogger<CustomExceptionHandlerMiddleware> _logger;
 
     public CustomExceptionHandlerMiddleware(RequestDelegate next,
-        IWebHostEnvironment env,
-        ILogger<CustomExceptionHandlerMiddleware> logger)
+        IWebHostEnvironment env)
     {
         _next = next;
         _env = env;
-        _logger = logger;
     }
 
     public async Task Invoke(HttpContext context)
     {
         string message = null;
         HttpStatusCode httpStatusCode = HttpStatusCode.InternalServerError;
-        ConsumerStatusCode apiStatusCode = ConsumerStatusCode.ServerError;
 
         try
         {
             await _next(context);
         }
-        catch (AppException exception)
+        catch (Exception exception)
         {
-            _logger.LogError(exception, exception.Message);
-            httpStatusCode = exception.HttpStatusCode;
-            apiStatusCode = exception.ApiStatusCode;
+            var innerException = exception.InnerException;
 
-            if (_env.IsDevelopment())
+            if (innerException is not null && innerException is ValidationException)
             {
-                var dic = new Dictionary<string, string>
+                httpStatusCode = HttpStatusCode.BadRequest;
+                var validationException = (ValidationException)innerException;
+
+                var result = new ConsumerValidationRejected
                 {
-                    ["Exception"] = exception.Message,
-                    ["StackTrace"] = exception.StackTrace,
+                    Message = validationException.Errors,
+                    StatusCode = ConsumerStatusCode.BadRequest,
                 };
-                if (exception.InnerException != null)
+
+                message = JsonSerializer.Serialize(result);
+            }
+            else if (innerException is not null && innerException is AppException)
+            {
+                var appException = (AppException)innerException;
+
+                var result = new ConsumerRejected
                 {
-                    dic.Add("InnerException.Exception", exception.InnerException.Message);
-                    dic.Add("InnerException.StackTrace", exception.InnerException.StackTrace);
-                }
+                    Message = appException.AdditionalData.ToString(),
+                    StatusCode = ConsumerStatusCode.ServerError
+                };
 
-                if (exception.AdditionalData != null)
-                    dic.Add("AdditionalData", JsonConvert.SerializeObject(exception.AdditionalData));
-
-                message = JsonConvert.SerializeObject(dic);
+                message = JsonSerializer.Serialize(result);
             }
             else
             {
-                message = exception.Message;
+                var result = new Dictionary<string, object>
+                {
+                    ["StatusCode"] = ConsumerStatusCode.ServerError,
+                    ["Exception"] = exception.InnerException is not null ? exception.InnerException.Message : exception.Message,
+                    ["StackTrace"] = exception.InnerException is not null ? exception.InnerException.StackTrace : exception.StackTrace,
+                };
+
+                message = JsonSerializer.Serialize(result);
             }
 
             await WriteToResponseAsync();
         }
+
+        async Task WriteToResponseAsync()
+        {
+            if (context.Response.HasStarted)
+                throw new InvalidOperationException(
+                    "The response has already started, the http status code middleware will not be executed.");
+
+            context.Response.StatusCode = (int)httpStatusCode;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync(message);
+        }
+
         // catch (SecurityTokenExpiredException exception)
         // {
         //     _logger.LogError(exception, exception.Message);
@@ -86,36 +104,6 @@ public class CustomExceptionHandlerMiddleware
         //     SetUnAuthorizeResponse(exception);
         //     await WriteToResponseAsync();
         // }
-        catch (Exception exception)
-        {
-            _logger.LogError(exception, exception.Message);
-
-            if (_env.IsDevelopment())
-            {
-                var dic = new Dictionary<string, string>
-                {
-                    ["Exception"] = exception.Message,
-                    ["StackTrace"] = exception.StackTrace,
-                };
-                message = JsonConvert.SerializeObject(dic);
-            }
-
-            await WriteToResponseAsync();
-        }
-
-        async Task WriteToResponseAsync()
-        {
-            if (context.Response.HasStarted)
-                throw new InvalidOperationException(
-                    "The response has already started, the http status code middleware will not be executed.");
-
-            // var result = new ApiResult(false, apiStatusCode, message); TODO: consumer rejected
-            // var json = JsonConvert.SerializeObject(result);
-
-            // context.Response.StatusCode = (int)httpStatusCode;
-            // context.Response.ContentType = "application/json";
-            // await context.Response.WriteAsync(json);
-        }
 
         // void SetUnAuthorizeResponse(Exception exception)
         // {
