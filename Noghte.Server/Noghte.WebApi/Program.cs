@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Noghte.Application.Configuration.Mapper;
@@ -13,7 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(opt => opt.SuppressModelStateInvalidFilter = true);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -27,12 +30,14 @@ builder.Services.AddDbContext<NoghteDbContext>(cfg =>
     cfg.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
 });
 
-#region Masstransit
-
-const string domainCommandName = nameof(IContract);
 var assembly = AppDomain.CurrentDomain.GetAssemblies()
            .Single(assembly => assembly.GetName().Name == "Noghte.Application");
 
+
+
+#region Masstransit
+
+const string domainCommandName = nameof(IContract);
 
 var requestClients = assembly.GetTypes()
     .Where(t => t.GetInterface(domainCommandName) is not null && t.Name.Contains(domainCommandName) is false)
@@ -43,10 +48,17 @@ builder.Services.AddMediator(cfg =>
 {
     cfg.AddConsumers(assembly);
     requestClients.ForEach(message => { cfg.AddRequestClient(message); });
-    // cfg.ConfigureMediator((context, cfg) => { cfg.UseConsumeFilter(typeof(ValidationFilter<>), context); });
+    cfg.ConfigureMediator((context, cfg) =>
+    {
+        cfg.UseConsumeFilter(typeof(ValidationFilter<>), context);
+    });
 });
 
 #endregion
+
+
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssembly(assembly);
 
 #region Redis
 
