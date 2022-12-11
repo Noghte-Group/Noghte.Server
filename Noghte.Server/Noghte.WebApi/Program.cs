@@ -82,11 +82,9 @@ noghteDbContext.Database.Migrate();
 #endregion
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(cfg => { cfg.DocExpansion(DocExpansion.None); });
-}
+
+app.UseSwagger();
+app.UseSwaggerUI(cfg => { cfg.DocExpansion(DocExpansion.None); });
 
 app.UseMiddleware<JwtMiddleware>();
 
